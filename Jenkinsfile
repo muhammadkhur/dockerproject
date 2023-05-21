@@ -1,36 +1,36 @@
 pipeline {
  environment {
- imagename = “muhammadkhur/jenkins-docker”
- registryCredential = ‘muhammad-dockerhub’
- dockerImage = ‘’
+ imagename = "muhammadkhur/jenkins-docker"
+ registryCredential = 'muhammad-dockerhub'
+ dockerImage = ''
  }
  agent any
  stages {
- stage(‘Cloning Git’) {
+ stage('Cloning Git') {
  steps {
- git([url: ‘https://github.com/muhammadkhur/dockerproject.git', branch: ‘main’])
+ git([url: 'https://github.com/muhammadkhur/dockerproject.git', branch: 'main'])
  }
  }
- stage(‘Building image’) {
+ stage('Building image') {
  steps{
  script {
  dockerImage = docker.build imagename
  }
  }
  }
- stage(‘Running image’) {
+ stage('Running image') {
  steps{
  script {
- sh “docker run ${imagename}:latest”
+ sh "docker run ${imagename}:latest"
  }
  }
  }
- stage(‘Deploy Image’) {
+ stage('Deploy Image') {
  steps{
  script {
- docker.withRegistry( ‘’, registryCredential ) {
- dockerImage.push(“$BUILD_NUMBER”)
- dockerImage.push(‘latest’)
+ docker.withRegistry( '', registryCredential ) {
+ dockerImage.push("$BUILD_NUMBER")
+ dockerImage.push('latest')
  }
  }
  }
